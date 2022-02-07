@@ -808,6 +808,16 @@ def silence_removal(signal, sampling_rate, st_win, st_step, smooth_window=0.5,
     return seg_limits
 
 
+
+def replaceExtension(filename,newext='segments'):
+    filebase = filename.split('.')
+    if len(filebase) > 1:
+        filebase[-1] = newext
+    else:
+        filebase.append(newext)
+    filename = '.'.join(filebase)
+    return filename
+
 def speaker_diarization(filename, n_speakers, mid_window=1.0, mid_step=0.1,
                         short_window=0.1, lda_dim=0, plot_res=False):
     """
@@ -1010,7 +1020,8 @@ def speaker_diarization(filename, n_speakers, mid_window=1.0, mid_step=0.1,
     class_names = ["speaker{0:d}".format(c) for c in range(num_speakers)]
 
     # load ground-truth if available
-    gt_file = filename.replace('.wav', '.segments')
+    #gt_file = filename.replace('.wav', '.segments') #old way of doing it, didn't capture all cases
+    gt_file = replaceExtension(filename)
     # if groundtruth exists
     if os.path.isfile(gt_file):
         seg_start, seg_end, seg_labs = read_segmentation_gt(gt_file)
